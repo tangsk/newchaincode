@@ -1,7 +1,5 @@
 package main
 	
-
-
 import (
 	"encoding/json"
 	"fmt"
@@ -69,17 +67,7 @@ func Work(stub shim.ChaincodeStubInterface, args []string, name string) error {
 	return nil
 }
 
-package utils
 
-import (
-	"fmt"
-	"bytes"
-	"crypto/x509"
-	"encoding/pem"
-	"strings"
-
-	"github.com/hyperledger/fabric/core/chaincode/shim"  //官方文件
-)
 
 // 获取当前操作智能合约成员的具体名称，如a1aw28
 func GetCreatorName(stub shim.ChaincodeStubInterface) (string, error) {
