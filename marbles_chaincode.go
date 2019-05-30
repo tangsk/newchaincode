@@ -48,7 +48,6 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 	// Handle different functions
 	if function == "initwork" { //create a new work
 		return t.initwork(stub, args)
-
 	} else if function == "delete" { //delete a work，有定义
 		return t.delete(stub, args)  
 	} else if function == "readwork" { //read a work，没定义
@@ -88,12 +87,11 @@ func (t *SimpleChaincode) initwork(stub shim.ChaincodeStubInterface, args []stri
 	objectType    := args[2]
 	workstartdate := args[3]
 	workenddate   := args[4]
-	key, err := strconv.Atoi(args[5])
+	// 生成联合主键
+	key, err := stub.CreateCompositeKey("Work", []string{name, args[5]})
 	if err != nil {
-		return shim.Error("Json serialize Work fail while Work, work id = " + args[5])
+		return fmt.Errorf("Failed to CreateCompositeKey while Work")
 	}
-
-	
 
 	// ==== Check if work already exists ====
 	workJsonBytes, err := stub.GetState(uid)
@@ -125,8 +123,7 @@ func (t *SimpleChaincode) initwork(stub shim.ChaincodeStubInterface, args []stri
 	if err != nil {
 		return shim.Error(err.Error())
 	}
-	//  Save index entry to state. Only the key name is needed, no need to store a duplicate copy of the work.
-	//  Note - passing a 'nil' value will effectively delete the key from state, therefore we pass null character as value
+
 	value := []byte{0x00}
 	stub.PutState(workexperienceNameIndexKey, value)
 
@@ -270,4 +267,3 @@ func getQueryResultForQueryString(stub shim.ChaincodeStubInterface, queryString 
 
 	return buffer.Bytes(), nil
 }
-
