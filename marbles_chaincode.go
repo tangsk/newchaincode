@@ -48,9 +48,9 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 	// Handle different functions
 	if function == "initwork" { //create a new work
 		return t.initwork(stub, args)
-	} else if function == "delete" { //delete a work，有定义
+	} else if function == "delete" { //delete a work
 		return t.delete(stub, args)  
-	} else if function == "readwork" { //read a work，没定义
+	} else if function == "readwork" { //read a work
 		return t.readwork(stub, args)
 	} else if function == "queryworks" { //find works based on an ad hoc rich query
 		return t.queryworks(stub, args)
@@ -87,11 +87,6 @@ func (t *SimpleChaincode) initwork(stub shim.ChaincodeStubInterface, args []stri
 	objectType    := args[2]
 	workstartdate := args[3]
 	workenddate   := args[4]
-	// 生成联合主键
-	key, err := stub.CreateCompositeKey("Work", []string{name, args[5]})
-	if err != nil {
-		return fmt.Errorf("Failed to CreateCompositeKey while Work")
-	}
 
 	// ==== Check if work already exists ====
 	workJsonBytes, err := stub.GetState(uid)
@@ -119,7 +114,7 @@ func (t *SimpleChaincode) initwork(stub shim.ChaincodeStubInterface, args []stri
 
 
 	indexName := "workexperience~name"
-	workexperienceNameIndexKey, err := stub.CreateCompositeKey(indexName, []string{work.workexperience, work.Name})
+	workexperienceNameIndexKey, err := stub.CreateCompositeKey(indexName, []string{work.workexperience, work.uid})
 	if err != nil {
 		return shim.Error(err.Error())
 	}
@@ -190,7 +185,7 @@ func (t *SimpleChaincode) delete(stub shim.ChaincodeStubInterface, args []string
 
 	// maintain the index
 	indexName := "workexperience~name"
-	workexperienceNameIndexKey, err := stub.CreateCompositeKey(indexName, []string{workJSON.workexperience, workJSON.Name})
+	workexperienceNameIndexKey, err := stub.CreateCompositeKey(indexName, []string{workJSON.workexperience, workJSON.uid})
 	if err != nil {
 		return shim.Error(err.Error())
 	}
