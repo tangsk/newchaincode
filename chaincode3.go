@@ -77,8 +77,8 @@ func (t *SimpleChaincode) initwork(stub shim.ChaincodeStubInterface, args []stri
 	var err error
 
 
-	if len(args) != 6 {
-		return shim.Error("Incorrect number of arguments. Expecting 6")
+	if len(args) != 5 {
+		return shim.Error("Incorrect number of arguments. Expecting 5")
 	}
 
 	// ==== Input sanitation ====
