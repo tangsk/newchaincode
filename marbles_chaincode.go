@@ -180,7 +180,6 @@ func (t *SimpleChaincode) delete(stub shim.ChaincodeStubInterface, args []string
 // transfer a work by setting a new workstartdate name on the work
 // ===========================================================
 
-
 func (t *SimpleChaincode) queryworks(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 
 	//   0
