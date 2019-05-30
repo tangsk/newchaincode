@@ -65,49 +65,26 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 // ============================================================
 func (t *SimpleChaincode) initwork(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 	var err error
-
-
-	if len(args) != 5 {
-		return shim.Error("Incorrect number of arguments. Expecting 5")
-	}
-
 	// ==== Input sanitation ====
 	fmt.Println("- start init work")
-	if len(args[0]) != 32 {
-		return fmt.Errorf("Parameter uid length error while Work, 32 is right")
-	}
-	if len(args[3]) != 14 {
-		return fmt.Errorf("Parameter WorkStartDate length error while Work, 14 is right")
-	}
-	if len(args[4]) != 14 {
-		return fmt.Errorf("Parameter WorkEndDate length error while Work, 14 is right")
-	}
 	uid           := args[0]
 	workexperience:= args[1]
 	objectType    := args[2]
 	workstartdate := args[3]
 	workenddate   := args[4]
 
-	// ==== Check if work already exists ====
-	workJsonBytes, err := stub.GetState(uid)
-	if err != nil {
-		return shim.Error("Failed to get work: " + err.Error())
-	} else if workJsonBytes != nil {
-		fmt.Println("This work already exists: " + uid)
-		return shim.Error("This work already exists: " + uid)
-	}
 
 	// ==== Create work object and marshal to JSON ====
 	objectType := "work"
 	work := &work{uid, workexperience, objectType, workstartdate, workenddate}
-	workJSONJsonBytes, err := json.Marshal(work)
+	workJSONasBytes, err := json.Marshal(work)
 	if err != nil {
 		return shim.Error(err.Error())
 	}
 
 
 	// === Save work to state ===
-	err = stub.PutState(uid, workJSONJsonBytes)
+	err = stub.PutState(uid, workJSONasBytes)
 	if err != nil {
 		return shim.Error(err.Error())
 	}
